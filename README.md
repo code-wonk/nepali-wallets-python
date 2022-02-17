@@ -9,8 +9,10 @@ An SDK for payment gateways integration in Nepal.
 Nepali Wallet python client offers a python sdk for the following payment
 gateways:
 
-- e-sewa ✅ unstable
-- khalti ✅ stable
-- ePay (in progress, unstable)
-- IMEPay (in progress, unstable)
-- IPay (in progress, unstable)
+- [X] e-sewa (unstable)
+- [X] khalti (stable)
+- [ ] Connect IPS
+- [ ] ePay
+- [ ] IMEPay
+- [ ] IPay
+- [ ] Hamro Pay
