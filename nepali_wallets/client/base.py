@@ -1,9 +1,58 @@
 from abc import ABC, abstractmethod
+from typing import Union
+
 import requests
+
+__all__ = [
+    'BasePaymentIntent',
+    'BasePaymentClient',
+    'PaymentClientError'
+]
+
+from requests import JSONDecodeError
 
 
 class PaymentClientError(BaseException):
     pass
+
+
+class BasePaymentIntent(ABC):
+    """
+    **BasePaymentIntent** is used by a ``BasePaymentClient`` instance to track the
+     response of the intent
+    `response`
+    :cvar response: a ``requests.Response`` instance  used to track the original response from the server exists
+    :cvar data: ``dict`` used only when there is no ``requests.Response`` instance exist
+    """
+    response: Union[requests.Response, None]
+    data: dict
+
+    def __init__(self, response: Union[requests.Response, dict], **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        if isinstance(response, requests.Response):
+            self.response = response
+            try:
+                self.data = response.json()
+            except JSONDecodeError:
+                self.data = {}
+        else:
+            self.data = response
+            self.response = None
+
+    @abstractmethod
+    def _get_intent_id(self) -> str:
+        pass
+
+    @property
+    def id(self):
+        return self._get_intent_id()
+
+    @property
+    def text(self):
+        if self.response:
+            return self.response.text
+        return None
 
 
 class BasePaymentClient(ABC):
@@ -39,7 +88,7 @@ class BasePaymentClient(ABC):
         pass
 
     @abstractmethod
-    def create_intent(self, *args, **kwargs):
+    def create_intent(self, *args, **kwargs) -> BasePaymentIntent:
         """
         It creates the payment intent for specific payment gateway
         """
