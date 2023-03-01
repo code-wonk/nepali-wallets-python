@@ -21,7 +21,6 @@ class KhaltiClient(BasePaymentClient):
             "public_key": self.public_key,
         }
 
-
     def create_intent(
         self,
         amount: int,
