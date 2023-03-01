@@ -1,7 +1,12 @@
 import json
 from typing import Union
 
-from .base import BasePaymentClient
+from .base import BasePaymentClient, BasePaymentIntent
+
+
+class KhaltiIntent(BasePaymentIntent):
+    def _get_intent_id(self) -> str:
+        return self.data.get('pidx')
 
 
 class KhaltiClient(BasePaymentClient):
@@ -30,20 +35,24 @@ class KhaltiClient(BasePaymentClient):
         amount_breakdown: Union[list, None] = None,
         product_details: Union[list, None] = None
 
-    ):
-        return self.session.post(
-            f'{self.base_url}/epayment/initiate/',
-            data=json.dumps({
-                "return_url": self.return_url,
-                "website_url": self.website_url,
-                "amount": amount,  # amount in paisa
-                'purchase_order_id': order_id,
-                "purchase_order_name": order_name,
-                "customer_info": customer_info,
-                "amount_breakdown": amount_breakdown or [],
-                "product_details": product_details or []
-            }),
-            headers=self._get_request_headers()
+    ) -> KhaltiIntent:
+        return KhaltiIntent(
+            self.session.post(
+                f'{self.base_url}/epayment/initiate/',
+                data=json.dumps(
+                    {
+                        "return_url": self.return_url,
+                        "website_url": self.website_url,
+                        "amount": amount,  # amount in paisa
+                        'purchase_order_id': order_id,
+                        "purchase_order_name": order_name,
+                        "customer_info": customer_info,
+                        "amount_breakdown": amount_breakdown or [],
+                        "product_details": product_details or []
+                    }
+                ),
+                headers=self._get_request_headers()
+            )
         )
 
     def complete_payment(self, token: str, confirmation_code: str):
