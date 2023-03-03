@@ -4,13 +4,14 @@ from .connectors import khalti_client
 from datetime import datetime
 
 __all__ = [
-    'intent__khalti',
+    'khalti__intent',
 ]
 
+
 @pytest.fixture
-def intent__khalti():
+def khalti__intent():
     current_timestamp = datetime.now().timestamp()
-    intent_response = khalti_client.create_intent(
+    intent = khalti_client.create_intent(
         amount=1000,
         order_id=f'order_{current_timestamp}',
         order_name="Test Order",
@@ -19,4 +20,4 @@ def intent__khalti():
             'email': 'abc@email.com',
         }
     )
-    return intent_response
+    return intent
