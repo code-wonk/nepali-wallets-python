@@ -1,3 +1,4 @@
+import json
 from abc import ABC, abstractmethod
 from typing import Union
 
@@ -27,6 +28,27 @@ class BasePaymentIntent(ABC):
     response: Union[requests.Response, None]
     data: dict
 
+    @classmethod
+    @abstractmethod
+    def from_response(cls, response: requests.Response) -> 'BasePaymentIntent':
+        """
+        This is a builder method that returns the BasePaymentIntent object from
+        the requests.Response object
+        """
+        pass
+
+    @classmethod
+    @abstractmethod
+    def from_dict(cls, data: dict) -> 'BasePaymentIntent':
+        """
+        This is a builder method that returns the BasePaymentIntent object from
+        the user-defined data type.
+        Example intent for khalti:
+
+        intent = BasePaymentIntent({"pidx": "A1B2C3"})
+        """
+        pass
+
     def __init__(self, response: Union[requests.Response, dict], **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -52,6 +74,8 @@ class BasePaymentIntent(ABC):
     def text(self):
         if self.response:
             return self.response.text
+        elif self.data:
+            return json.dumps(self.data)
         return None
 
 
