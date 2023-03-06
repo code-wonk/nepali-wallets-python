@@ -1,10 +1,22 @@
 import json
 from typing import Union
 
+import requests
+
 from .base import BasePaymentClient, BasePaymentIntent
 
 
 class KhaltiIntent(BasePaymentIntent):
+    @classmethod
+    def from_response(cls, response: requests.Response) -> 'KhaltiIntent':
+        return KhaltiIntent(response)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'KhaltiIntent':
+        if 'pidx' not in data:
+            raise KeyError("Payment intent ID 'PIDX' not supplied")
+        return KhaltiIntent(data)
+
     def _get_intent_id(self) -> str:
         return self.data.get('pidx')
 
@@ -36,7 +48,7 @@ class KhaltiClient(BasePaymentClient):
         product_details: Union[list, None] = None
 
     ) -> KhaltiIntent:
-        return KhaltiIntent(
+        return KhaltiIntent.from_response(
             self.session.post(
                 f'{self.base_url}/epayment/initiate/',
                 data=json.dumps(
