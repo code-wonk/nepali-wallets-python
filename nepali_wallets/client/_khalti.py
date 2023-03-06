@@ -71,8 +71,18 @@ class KhaltiClient(BasePaymentClient):
         print("payment completion is automatically handled by the khalti client itself")
         raise NotImplementedError()
 
-    def verify_payment(self, token: str):
-        raise NotImplementedError()
+    def verify_payment(self, intent: Union[KhaltiIntent, str]):
+        if isinstance(intent, KhaltiIntent):
+            intent = intent.id
+        return self.session.post(
+            f'{self.base_url}/epayment/lookup/',
+            data=json.dumps(
+                {
+                    'pidx': intent
+                }
+            ),
+            headers=self._get_request_headers()
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
