@@ -4,11 +4,7 @@ from typing import Union
 
 import requests
 
-__all__ = [
-    'BasePaymentIntent',
-    'BasePaymentClient',
-    'PaymentClientError'
-]
+__all__ = ["BasePaymentIntent", "BasePaymentClient", "PaymentClientError"]
 
 from requests import JSONDecodeError
 
@@ -25,12 +21,13 @@ class BasePaymentIntent(ABC):
     :cvar response: a ``requests.Response`` instance  used to track the original response from the server exists
     :cvar data: ``dict`` used only when there is no ``requests.Response`` instance exist
     """
+
     response: Union[requests.Response, None]
     data: dict
 
     @classmethod
     @abstractmethod
-    def from_response(cls, response: requests.Response) -> 'BasePaymentIntent':
+    def from_response(cls, response: requests.Response) -> "BasePaymentIntent":
         """
         This is a builder method that returns the BasePaymentIntent object from
         the requests.Response object
@@ -39,7 +36,7 @@ class BasePaymentIntent(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict) -> 'BasePaymentIntent':
+    def from_dict(cls, data: dict) -> "BasePaymentIntent":
         """
         This is a builder method that returns the BasePaymentIntent object from
         the user-defined data type.
