@@ -1,3 +1,3 @@
-from ._khalti import KhaltiClient
+from ._khalti import *
 from ._esewa import *
-from ._nchl import ConnectIPSClient
+from ._nchl import *

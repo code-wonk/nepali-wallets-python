@@ -1,5 +1,9 @@
 from .base import BasePaymentClient
 
+__all__ = [
+    "ConnectIPSClient",
+]
+
 
 class ConnectIPSClient(BasePaymentClient):
     username: str
@@ -26,8 +30,8 @@ class ConnectIPSClient(BasePaymentClient):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.sandbox:
-            self.base_url = 'https://uat.connectips.com:7443'
+            self.base_url = "https://uat.connectips.com:7443"
             self.login_url = "https://uat.connectips.com:7443/connectipswebgw/loginpage"
         else:
-            self.base_url = 'https://login.connectips.com'
+            self.base_url = "https://login.connectips.com"
             self.login_url = "https://login.connectips.com/connectipswebgw/loginpage"

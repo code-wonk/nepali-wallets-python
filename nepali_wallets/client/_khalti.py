@@ -5,6 +5,10 @@ import requests
 
 from .base import BasePaymentClient, BasePaymentIntent
 
+__all__ = [
+    "KhaltiIntent",
+    "KhaltiClient",
+]
 
 class KhaltiIntent(BasePaymentIntent):
     @classmethod
